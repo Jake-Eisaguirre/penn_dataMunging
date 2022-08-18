@@ -21,6 +21,43 @@ librarian::shelf(tidyverse, here, janitor, lubridate, parsedate, stringr,hms)
 #### read in capture data
 ```{r}
 
+munged_Amphibian_Processing_App <- read_csv(here("data", "munged_Amphibian_Processing_App.csv"))
 
+munged_Amphibian_Captured_Information <-  read_csv(here("data", "munged_Amphibian_Captured_Information.csv"))
+                       
+munged_Amphibian_Captured_Information_Repeatable <- read_csv(here("data", "munged_Amphibian_Captured_Information_Repeatable.csv"))
+
+munged_Amphibian_Processing_App_Repeatable <- read_csv(here("data", "munged_Amphibian_Processing_App_Repeatable.csv"))
+```
+#### clean up visit table
+```{r}
+
+visit <- visit_table %>% 
+  select(!c(1:3))
+
+  
+merged_AmphibianCaptureSurvey <- right_join(right_join(munged_Amphibian_Captured_Information,
+                                                        munged_Amphibian_Captured_Information_Repeatable, 
+                                                        by = c("fulcrum_id" = "fulcrum_parent_id")),
+                                            right_join(munged_Amphibian_Processing_App,
+                                                       munged_Amphibian_Processing_App_Repeatable, 
+                                                       by =c('fulcrum_id' = 'fulcrum_parent_id')),
+                                            by = c('location', 'date', 'bag_id')) %>% 
+  select(!c(1:3)) %>% 
+  filter(...1.y.x == unique(...1.y.x)) %>% 
+  select(!c(8:10)) %>% 
+  select(!c(15:17)) %>% 
+  select(!c(18:20)) %>% 
+  select(!c(46:49)) 
+
+# ) %>%
+#   unique() %>% 
+#   mutate(body_temperature = if_else(is.na(body_temperature.x), body_temperature.y, body_temperature.x,),
+#          time_of_capture = if_else(is.na(time_of_capture.x), time_of_capture.y, time_of_capture.x,),
+#          microhabitat_type = if_else(is.na(microhabitat_type.x), microhabitat_type.y, microhabitat_type.x,),
+#          microhabitat_temperature = if_else(is.na(microhabitat_temperature.x), microhabitat_temperature.y, microhabitat_temperature.x,)) %>% 
+#   arrange(created_at.y.x) %>%
+#   mutate_at(vars(bd_swab_tube_id:toe_clip_tube_id), funs(replace(., duplicated(.), NA))) %>%
+#   select(observer, date, location, start_time, end_time, time_of_capture, body_temperature, microhabitat_type, microhabitat_temperature, species_capture, life_stage, sex, bd_swab_tube_id:toe_clip_tube_id, capture_comments) %>% unique()  
 ```
 
