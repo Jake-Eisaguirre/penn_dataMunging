@@ -322,6 +322,8 @@ survey_table <- plyr::rbind.fill(acoustic_survey_table, visual_survey_table, cap
   mutate(temp_reg_id = cur_group_id()) %>% 
   filter(!duplicated(temp_reg_id))
 
+write_csv(survey_table, here("clean_tables", "survey.csv"))
+
 ```
 
 #### bind all animal table for uniquness

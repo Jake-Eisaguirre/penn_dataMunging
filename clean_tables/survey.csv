@@ -1,0 +1,48 @@
+site,date,observer,detection_type,start_time,end_time,duration_min,survey_time,survey_comment,temp_reg_id
+wood lab pond,2022-05-26T00:00:00Z,brandon hoenig,acoustic,20:52:00,20:55:00,3,night,NA,8
+wood lab pond,2022-05-27T00:00:00Z,brandon hoenig,acoustic,20:37:00,20:40:00,3,night,NA,10
+phelps pond,2022-06-03T00:00:00Z,brandon hoenig,acoustic,20:44:00,20:47:00,3,night,NA,12
+rv pond,2022-06-08T00:00:00Z,brandon hoenig,acoustic,21:00:00,21:03:00,3,night,NA,17
+tuttle pond,2022-06-14T00:00:00Z,brandon hoenig,acoustic,21:07:00,21:10:00,3,night,NA,19
+tuttle pond,2022-06-15T00:00:00Z,brandon hoenig,acoustic,21:29:00,21:32:00,3,night,NA,23
+tryon-weber,2022-06-23T00:00:00Z,emily jolly,acoustic,21:41:00,21:44:00,3,night,NA,28
+vorisek pond,2022-06-27T00:00:00Z,brandon hoenig,acoustic,22:07:00,22:10:00,3,night,NA,32
+rv pond,2022-07-11T00:00:00Z,brandon hoenig,acoustic,21:34:00,21:37:00,3,night,NA,37
+tuttle pond,2022-07-18T00:00:00Z,brandon hoenig,acoustic,21:26:00,21:29:00,3,night,NA,42
+wood lab pond,2022-05-26T00:00:00Z,brandon hoenig,visual,20:57:00,21:17:00,20,night,NA,9
+wood lab pond,2022-05-27T00:00:00Z,emily jolly,visual,20:43:00,NA,NA,night,NA,11
+phelps pond,2022-06-03T00:00:00Z,brandon hoenig,visual,20:59:00,21:25:00,26,night,NA,13
+tuttle pond,2022-06-14T00:00:00Z,emily jolly,visual,21:18:00,21:38:00,20,night,NA,22
+NA,2022-06-03T00:00:00Z,brandon hoenig,visual,20:57:00,21:26:00,29,night,NA,14
+tuttle pond,2022-06-15T00:00:00Z,brandon hoenig,visual,21:33:00,21:56:00,23,night,NA,25
+vorisek pond,2022-06-27T00:00:00Z,myah madril,visual,22:14:00,22:34:00,20,night,NA,35
+rv pond,2022-07-11T00:00:00Z,sydney dawson,visual,21:39:00,22:03:00,24,night,NA,40
+tuttle pond,2022-07-18T00:00:00Z,myah madril,visual,21:30:00,21:52:00,22,night,NA,45
+admin pond,2022-05-20T00:00:00Z,emily jolly,capture,13:28:00,14:37:00,69,day,NA,7
+admin pond,2022-05-19T00:00:00Z,emily jolly,capture,19:31:00,22:59:00,208,night,NA,6
+rv pond,2022-06-07T00:00:00Z,brandon hoenig,capture,21:25:00,23:07:00,102,night,NA,15
+rv pond,2022-06-08T00:00:00Z,emily jolly,capture,21:11:00,22:02:00,51,night,NA,18
+tuttle pond,2022-06-14T00:00:00Z,sydney dawson,capture,21:44:00,22:47:00,63,night,NA,20
+tuttle pond,2022-06-15T00:00:00Z,sydney dawson,capture,21:58:00,23:32:00,94,night,NA,24
+tryon-weber,2022-06-22T00:00:00Z,sydney dawson,capture,10:58:00,12:12:00,74,day,NA,27
+tryon-weber,2022-06-23T00:00:00Z,myah madril,capture,10:40:00,12:33:00,113,day,NA,29
+tryon-weber,2022-06-23T00:00:00Z,emily jolly,capture,21:48:00,22:27:00,39,night,NA,30
+vorisek pond,2022-06-27T00:00:00Z,myah madril,capture,22:34:00,23:58:00,84,night,NA,33
+vorisek pond,2022-06-28T00:00:00Z,sydney dawson,capture,21:41:00,NA,NA,night,NA,36
+rv pond,2022-07-11T00:00:00Z,sydney dawson,capture,22:12:00,00:04:00,112,night,"was difficult to catch frogs, especially bullfrogs , jumped right away",38
+rv pond,2022-07-12T00:00:00Z,myah madril,capture,22:03:00,00:00:00,117,night,NA,41
+tuttle pond,2022-07-18T00:00:00Z,NA,capture,21:58:00,23:42:00,104,night,NA,43
+tuttle pond,2022-07-19T00:00:00Z,sydney dawson,capture,21:36:00,22:04:00,28,night,NA,46
+rv pond,2022-06-07T00:00:00Z,NA,capture,NA,NA,NA,NA,NA,16
+tuttle pond,2022-06-14T00:00:00Z,NA,capture,NA,NA,NA,NA,NA,21
+tuttle pond,2022-06-16T00:00:00Z,NA,capture,NA,NA,NA,NA,NA,26
+tryon-weber,2022-06-23T00:00:00Z,NA,capture,NA,NA,NA,NA,NA,31
+vorisek pond,2022-06-27T00:00:00Z,NA,capture,NA,NA,NA,NA,NA,34
+rv pond,2022-07-11T00:00:00Z,NA,capture,NA,NA,NA,NA,NA,39
+tuttle pond,2022-07-18T00:00:00Z,NA,capture,NA,NA,NA,NA,NA,44
+tuttle pond,2022-07-19T00:00:00Z,NA,capture,NA,NA,NA,NA,NA,47
+wood lab pond,2022-05-04T00:00:00Z,NA,capture,NA,NA,NA,NA,NA,1
+phelps pond,2022-05-05T00:00:00Z,NA,capture,NA,NA,NA,NA,NA,2
+admin pond,2022-05-11T00:00:00Z,NA,capture,NA,NA,NA,NA,NA,3
+rv pond,2022-05-12T00:00:00Z,NA,capture,NA,NA,NA,NA,NA,4
+admin pond,2022-05-18T00:00:00Z,NA,capture,NA,NA,NA,NA,NA,5
