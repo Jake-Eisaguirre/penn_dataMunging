@@ -29,11 +29,28 @@ munged_Amphibian_Captured_Information_Repeatable <- read_csv(here("data", "munge
 
 munged_Amphibian_Processing_App_Repeatable <- read_csv(here("data", "munged_Amphibian_Processing_App_Repeatable.csv"))
 ```
-#### clean up visit table
+
+#### read in visual data
 ```{r}
 
-visit <- visit_table %>% 
-  select(!c(1:3))
+munged_VisualEncounter_Survey <- read_csv(here("data", "munged_VisualEncounter_Survey.csv"))
+  
+munged_VisualEncounter_Survey_Repeatable <- read_csv(here("data", "munged_VisualEncounter_Survey_Repeatable.csv"))
+
+```
+
+#### read in acoustic data
+```{r}
+
+munged_Acoustic_Survey <- read_csv(here("data", "munged_Acoustic_Survey.csv"))
+
+munged_Acoustic_Survey_Repeatable <- read_csv(here("data", "munged_Acoustic_Survey_Repeatable.csv"))
+
+```
+
+
+#### merge all capture tables
+```{r}
 
   
 merged_AmphibianCaptureSurvey <- right_join(right_join(munged_Amphibian_Captured_Information,
@@ -43,21 +60,106 @@ merged_AmphibianCaptureSurvey <- right_join(right_join(munged_Amphibian_Captured
                                                        munged_Amphibian_Processing_App_Repeatable, 
                                                        by =c('fulcrum_id' = 'fulcrum_parent_id')),
                                             by = c('location', 'date', 'bag_id')) %>% 
-  select(!c(1:3)) %>% 
-  filter(...1.y.x == unique(...1.y.x)) %>% 
-  select(!c(8:10)) %>% 
-  select(!c(15:17)) %>% 
-  select(!c(18:20)) %>% 
-  select(!c(46:49)) 
+  # group_by(bag_photo) %>%
+  # mutate(temp_id = cur_group_id()) %>%
+  # filter(!duplicated(temp_id)) %>%
+  select(!c("...1.x.x", "fulcrum_id.x", "created_at.x.x")) %>% 
+  select(!c("...1.y.x", "fulcrum_id.y.x", "created_at.y.x", "...1.x.y", "fulcrum_id.y.y", "created_at.x.y",
+            "...1.y.y", "fulcrum_id.y.y.y","created_at.y.y", "time_of_capture.y", "body_temperature.y", "microhabitat_type.y",
+            "microhabitat_temperature.y", "observer_other", "processor_other", "capture_type_other", "sex_other", "species")) %>% 
+  rename(survey_comment = survey_comments.x,
+         visit_comment = survey_comments.y,
+         time_of_capture = time_of_capture.x,
+         body_temperature_c = body_temperature.x,
+         microhabitat_type = microhabitat_type.x,
+         microhabitat_temperature_c = microhabitat_temperature.x,
+         site = location) %>% 
+  mutate(date = parse_iso_8601(date),
+         observer = str_to_lower(observer),
+         site = str_to_lower(site),
+         bag_id = str_to_lower(bag_id),
+         microhabitat_type = str_to_lower(microhabitat_type),
+         processor = str_to_lower(processor),
+         capture_type = str_to_lower(capture_type),
+         life_stage = str_to_lower(life_stage),
+         species_capture = str_to_lower(species_capture),
+         sex = str_to_lower(sex)) %>% 
+  unique() %>% 
+    mutate(start_hour = hour(start_time),
+         end_hour = hour(end_time),
+         survey_time = case_when(start_hour >= 6 & end_hour >= 6 & end_hour < 19 ~ "day", 
+                          start_hour >= 19 &  (end_hour < 6 | end_hour <= 23) |
+                         (start_hour < 6 & end_hour < 6)~ "night",
+                         start_hour >=19 ~"night")) %>% 
+  select(!c(start_hour, end_hour)) %>% 
+  mutate(species_capture = paste(species_capture, species_capture_other, sep = ""),
+         species_capture = str_replace(species_capture, "NA", ""),
+         region = "pa",
+         location = "usa",
+         detection_type = "capture") %>% 
+  select(!c(species_capture_other))
 
-# ) %>%
-#   unique() %>% 
-#   mutate(body_temperature = if_else(is.na(body_temperature.x), body_temperature.y, body_temperature.x,),
-#          time_of_capture = if_else(is.na(time_of_capture.x), time_of_capture.y, time_of_capture.x,),
-#          microhabitat_type = if_else(is.na(microhabitat_type.x), microhabitat_type.y, microhabitat_type.x,),
-#          microhabitat_temperature = if_else(is.na(microhabitat_temperature.x), microhabitat_temperature.y, microhabitat_temperature.x,)) %>% 
-#   arrange(created_at.y.x) %>%
-#   mutate_at(vars(bd_swab_tube_id:toe_clip_tube_id), funs(replace(., duplicated(.), NA))) %>%
-#   select(observer, date, location, start_time, end_time, time_of_capture, body_temperature, microhabitat_type, microhabitat_temperature, species_capture, life_stage, sex, bd_swab_tube_id:toe_clip_tube_id, capture_comments) %>% unique()  
+
+```
+
+#### pull out capture site table
+```{r}
+
+cap_site_table <- merged_AmphibianCaptureSurvey %>% 
+  select(location, region, site, date, observer)
+
+```
+
+#### pull out capture visit table
+```{r}
+
+cap_visit_table <- merged_AmphibianCaptureSurvey %>% 
+  select(date, survey_time, site, visit_comment)
+
+```
+
+#### pull out capture survey table
+```{r}
+
+cap_survey_table <- merged_AmphibianCaptureSurvey %>% 
+  select(site, date, observer, detection_type, start_time, end_time, survey_comment, survey_time) %>% 
+  mutate(duration_min = if_else(end_time < start_time,
+                            as_hms(86400) - start_time + end_time,
+                            end_time - start_time),
+         duration_min = duration_min/60) %>% 
+  relocate(survey_comment, .after = duration_min)
+
+cap_survey_table$duration_min <- str_sub(cap_survey_table$duration_min, -4) %>% 
+  as.numeric()
+
+```
+
+#### pull out cap animal table
+```{r}
+
+cap_animal_table <- merged_AmphibianCaptureSurvey %>% 
+  select(c(bag_id:detection_type, site, date))
+
+```
+
+
+#### merge visual tables
+```{r}
+merged_VisualEncounterSurvey <-
+left_join(munged_VisualEncounter_Survey, munged_VisualEncounter_Survey_Repeatable, by = c('fulcrum_id' = 'fulcrum_parent_id')) %>% 
+  select(observer, date, location, start_time, end_time, species_ves, count_ves, comments_ves) %>%
+  unique() %>%
+  drop_na(species_ves) 
+
+```
+
+
+#### merge acoustic tables
+```{r}
+
+merged_AcousticSurvey <-
+left_join(munged_Acoustic_Survey, munged_Acoustic_Survey_Repeatable, by = c('fulcrum_id' = 'fulcrum_parent_id')) %>%
+  select(observer, date, location, start_time, end_time, species_acoustic, call_index, acoustic_comments) %>%
+  unique() 
 ```
 
