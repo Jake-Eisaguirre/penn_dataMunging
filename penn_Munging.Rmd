@@ -49,7 +49,7 @@ munged_Acoustic_Survey_Repeatable <- read_csv(here("data", "munged_Acoustic_Surv
 ```
 
 
-#### merge all capture tables
+#### merge all capture tables - bad technique, too many pipes
 ```{r}
 
   
@@ -60,13 +60,10 @@ merged_AmphibianCaptureSurvey <- right_join(right_join(munged_Amphibian_Captured
                                                        munged_Amphibian_Processing_App_Repeatable, 
                                                        by =c('fulcrum_id' = 'fulcrum_parent_id')),
                                             by = c('location', 'date', 'bag_id')) %>% 
-  # group_by(bag_photo) %>%
-  # mutate(temp_id = cur_group_id()) %>%
-  # filter(!duplicated(temp_id)) %>%
-  select(!c("...1.x.x", "fulcrum_id.x", "created_at.x.x")) %>% 
-  select(!c("...1.y.x", "fulcrum_id.y.x", "created_at.y.x", "...1.x.y", "fulcrum_id.y.y", "created_at.x.y",
-            "...1.y.y", "fulcrum_id.y.y.y","created_at.y.y", "time_of_capture.y", "body_temperature.y", "microhabitat_type.y",
-            "microhabitat_temperature.y", "observer_other", "processor_other", "capture_type_other", "sex_other", "species")) %>% 
+  select(!c("...1.x.x", "fulcrum_id.x", "created_at.x.x","...1.y.x", "fulcrum_id.y.x", "created_at.y.x", "...1.x.y", 
+            "fulcrum_id.y.y", "created_at.x.y", "...1.y.y", "fulcrum_id.y.y.y","created_at.y.y", "time_of_capture.y", 
+            "body_temperature.y", "microhabitat_type.y","microhabitat_temperature.y", "observer_other", "processor_other",
+            "capture_type_other", "sex_other", "species")) %>% 
   rename(survey_comment = survey_comments.x,
          visit_comment = survey_comments.y,
          time_of_capture = time_of_capture.x,
@@ -114,7 +111,8 @@ cap_site_table <- merged_AmphibianCaptureSurvey %>%
 ```{r}
 
 cap_visit_table <- merged_AmphibianCaptureSurvey %>% 
-  select(date, survey_time, site, visit_comment)
+  select(date, survey_time, site, visit_comment) %>% 
+  mutate(visit_comment = str_to_lower(visit_comment))
 
 ```
 
@@ -126,7 +124,8 @@ cap_survey_table <- merged_AmphibianCaptureSurvey %>%
   mutate(duration_min = if_else(end_time < start_time,
                             as_hms(86400) - start_time + end_time,
                             end_time - start_time),
-         duration_min = duration_min/60) %>% 
+         duration_min = duration_min/60,
+         survey_comment = str_to_lower(survey_comment)) %>% 
   relocate(survey_comment, .after = duration_min)
 
 cap_survey_table$duration_min <- str_sub(cap_survey_table$duration_min, -4) %>% 
@@ -138,7 +137,11 @@ cap_survey_table$duration_min <- str_sub(cap_survey_table$duration_min, -4) %>%
 ```{r}
 
 cap_animal_table <- merged_AmphibianCaptureSurvey %>% 
-  select(c(bag_id:detection_type, site, date))
+  select(c(bag_id:detection_type, site, date)) %>% 
+  mutate(capture_comments = str_to_lower(capture_comments)) %>% 
+   mutate(temp_ves_id = 1:n())
+
+write_csv(cap_animal_table, here("clean_tables", "capture.csv"))
 
 ```
 
@@ -149,7 +152,68 @@ merged_VisualEncounterSurvey <-
 left_join(munged_VisualEncounter_Survey, munged_VisualEncounter_Survey_Repeatable, by = c('fulcrum_id' = 'fulcrum_parent_id')) %>% 
   select(observer, date, location, start_time, end_time, species_ves, count_ves, comments_ves) %>%
   unique() %>%
-  drop_na(species_ves) 
+  drop_na(species_ves) %>% 
+  mutate(observer = str_to_lower(observer),
+         date = parse_iso_8601(date),
+         location = str_to_lower(location),
+         species_ves = str_to_lower(species_ves),
+         comments_ves = str_to_lower(comments_ves)) %>% 
+  rename(count = count_ves,
+         site = location) %>% 
+      mutate(start_hour = hour(start_time),
+         end_hour = hour(end_time),
+         survey_time = case_when(start_hour >= 6 & end_hour >= 6 & end_hour < 19 ~ "day", 
+                          start_hour >= 19 &  (end_hour < 6 | end_hour <= 23) |
+                         (start_hour < 6 & end_hour < 6)~ "night",
+                         start_hour >=19 ~"night"),
+         region = "pa",
+         location = "usa",
+         detection_type = "visual") %>% 
+  select(!c(start_hour, end_hour))
+
+```
+
+#### pull out visual site table
+```{r}
+
+visual_site_table <- merged_VisualEncounterSurvey %>% 
+  select(location, region, site, date, observer)
+
+```
+
+#### pull out visual visit table
+```{r}
+
+visual_visit_table <- merged_VisualEncounterSurvey %>% 
+  select(date, survey_time, site, detection_type)
+
+```
+
+
+#### pull out visual survey table
+```{r}
+
+visual_survey_table <- merged_VisualEncounterSurvey %>% 
+  select(site, date, observer, detection_type, start_time, end_time, detection_type, survey_time) %>% 
+  mutate(duration_min = if_else(end_time < start_time,
+                            as_hms(86400) - start_time + end_time,
+                            end_time - start_time),
+         duration_min = duration_min/60) %>% 
+  relocate(detection_type, .after = duration_min)
+
+visual_survey_table$duration_min <- str_sub(visual_survey_table$duration_min, -4) %>% 
+  as.numeric()
+
+```
+
+#### pull out visual animal table
+```{r}
+
+visual_animal_table <- merged_VisualEncounterSurvey %>% 
+  select(date, site, species_ves, count, comments_ves, survey_time, detection_type) %>% 
+   mutate(temp_ves_id = 1:n())
+
+write_csv(visual_animal_table, here("clean_tables", "visual.csv"))
 
 ```
 
@@ -160,6 +224,110 @@ left_join(munged_VisualEncounter_Survey, munged_VisualEncounter_Survey_Repeatabl
 merged_AcousticSurvey <-
 left_join(munged_Acoustic_Survey, munged_Acoustic_Survey_Repeatable, by = c('fulcrum_id' = 'fulcrum_parent_id')) %>%
   select(observer, date, location, start_time, end_time, species_acoustic, call_index, acoustic_comments) %>%
-  unique() 
+  unique() %>%
+  mutate(observer = str_to_lower(observer),
+         date = parse_iso_8601(date),
+         location = str_to_lower(location),
+         species_acoustic = str_to_lower(species_acoustic),
+         call_index = str_to_lower(call_index),
+         acoustic_comments = str_to_lower(acoustic_comments)) %>% 
+  rename(site = location) %>% 
+  mutate(duration_min = if_else(end_time < start_time,
+                            as_hms(86400) - start_time + end_time,
+                            end_time - start_time),
+         duration_min = duration_min/60,
+         detection_type = "acoustic",
+          region = "pa",
+         location = "usa",
+         start_hour = hour(start_time),
+         end_hour = hour(end_time),
+         survey_time = case_when(start_hour >= 6 & end_hour >= 6 & end_hour < 19 ~ "day", 
+                          start_hour >= 19 &  (end_hour < 6 | end_hour <= 23) |
+                         (start_hour < 6 & end_hour < 6)~ "night",
+                         start_hour >=19 ~"night")) %>%
+  relocate(duration_min, .before = species_acoustic)
+
+merged_AcousticSurvey$duration_min <- str_sub(merged_AcousticSurvey$duration_min, -4) %>% 
+  as.numeric()
+  
+```
+
+#### pull out acoustic site table
+```{r}
+
+acoustic_site_table <- merged_AcousticSurvey %>% 
+  select(location, region, site, date, observer)
+
+```
+
+#### pull out acoustic visit table
+```{r}
+
+acoustic_visit_table <- merged_AcousticSurvey %>% 
+  select(date, survey_time, site, detection_type)
+
+```
+
+#### pull out acoustic survey table
+```{r}
+
+acoustic_survey_table <- merged_AcousticSurvey %>% 
+  select(site, date, observer, detection_type, start_time, end_time, duration_min, detection_type, survey_time)
+  
+
+```
+
+#### pull out acoustic animal table
+```{r}
+
+acoustic_animal_table <- merged_AcousticSurvey %>% 
+  select(date, site, species_acoustic, call_index, acoustic_comments, survey_time, detection_type) %>% 
+   mutate(temp_ves_id = 1:n())
+
+write_csv(acoustic_animal_table, here("clean_tables", "acoustic.csv"))
+
+```
+
+#### bind all site tables for uniquness
+```{r}
+
+site_table <- rbind(acoustic_site_table, visual_site_table, cap_site_table) %>% 
+  group_by(site) %>% 
+  mutate(temp_reg_id = cur_group_id()) %>% 
+  filter(!duplicated(temp_reg_id))
+
+write_csv(site_table, here("clean_tables", "site.csv"))
+
+```
+
+
+
+#### bind all visit table for uniquness
+```{r}
+
+visit_table <- plyr::rbind.fill(acoustic_visit_table, visual_visit_table, cap_visit_table) %>% 
+  group_by(date, survey_time, site) %>% 
+  mutate(temp_reg_id = cur_group_id()) %>% 
+  filter(!duplicated(temp_reg_id))
+
+write_csv(visit_table, here("clean_tables", "visit.csv"))
+
+```
+
+#### bind all survey table for uniquness
+```{r}
+
+survey_table <- plyr::rbind.fill(acoustic_survey_table, visual_survey_table, cap_survey_table) %>% 
+  group_by(date, site, detection_type, survey_time) %>% 
+  mutate(temp_reg_id = cur_group_id()) %>% 
+  filter(!duplicated(temp_reg_id))
+
+```
+
+#### bind all animal table for uniquness
+```{r}
+
+
+
 ```
 
