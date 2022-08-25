@@ -111,7 +111,7 @@ cap_site_table <- merged_AmphibianCaptureSurvey %>%
 ```{r}
 
 cap_visit_table <- merged_AmphibianCaptureSurvey %>% 
-  select(date, survey_time, site, visit_comment) %>% 
+  select(date, survey_time, site, visit_comment, detection_type) %>% 
   mutate(visit_comment = str_to_lower(visit_comment))
 
 ```
