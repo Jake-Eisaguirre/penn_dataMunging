@@ -94,7 +94,8 @@ merged_AmphibianCaptureSurvey <- right_join(right_join(munged_Amphibian_Captured
          region = "pa",
          location = "usa",
          detection_type = "capture") %>% 
-  select(!c(species_capture_other))
+  select(!c(species_capture_other))%>% 
+  mutate(survey_time = if_else(is.na(survey_time), "night", survey_time))
 
 
 ```
@@ -126,10 +127,12 @@ cap_survey_table <- merged_AmphibianCaptureSurvey %>%
                             end_time - start_time),
          duration_min = duration_min/60,
          survey_comment = str_to_lower(survey_comment)) %>% 
-  relocate(survey_comment, .after = duration_min)
+  relocate(survey_comment, .after = duration_min) 
 
 cap_survey_table$duration_min <- str_sub(cap_survey_table$duration_min, -4) %>% 
   as.numeric()
+
+
 
 ```
 
@@ -137,11 +140,35 @@ cap_survey_table$duration_min <- str_sub(cap_survey_table$duration_min, -4) %>%
 ```{r}
 
 cap_animal_table <- merged_AmphibianCaptureSurvey %>% 
+  mutate(capture_type = if_else(is.na(capture_type), "new", capture_type)) %>% 
   select(c(bag_id:detection_type, site, date)) %>% 
-  mutate(capture_comments = str_to_lower(capture_comments)) %>% 
-   mutate(temp_ves_id = 1:n())
+  mutate(capture_comments = str_to_lower(capture_comments),
+         bd_swab_tube_id = if_else(bd_swab_tube_id == "BdSwab00000", "NA", bd_swab_tube_id),
+         dry_swab_tube_id=if_else(dry_swab_tube_id == "DrySwab00000", "NA", dry_swab_tube_id),
+         crispr_swab_tube_id=if_else(crispr_swab_tube_id == "CRSwab00000", "NA", crispr_swab_tube_id),
+         bacterial_swab_tube_id=if_else(bacterial_swab_tube_id == "BacSwab00000", "NA", bacterial_swab_tube_id),
+         mucusome_id=if_else(mucusome_id == "MucBath00000", "NA", mucusome_id),
+         amp_id_1=if_else(amp_id_1 == "AMPBath00000", "NA", amp_id_1),
+         amp_id_2=if_else(amp_id_2 == "AMPBath00000", "NA", amp_id_2),
+         amp_id_3=if_else(amp_id_3 == "AMPBath00000", "NA", amp_id_3),
+         amp_id_4=if_else(amp_id_4 == "AMPBath00000", "NA", amp_id_4),
+         antibody_id_1=if_else(antibody_id_1 == "AntiBod00000", "NA", antibody_id_1),
+         antibody_id_2=if_else(antibody_id_2 == "AntiBod00000", "NA", antibody_id_2),
+         antibody_id_3=if_else(antibody_id_3 == "AntiBod00000", "NA", antibody_id_3),
+         antibody_id_4=if_else(antibody_id_4 == "AntiBod00000", "NA", antibody_id_4),
+         toe_clip_tube_id=if_else(toe_clip_tube_id == "ToeClip00000", "NA", toe_clip_tube_id))%>% 
+   mutate(temp_ves_id = 1:n()) %>% 
+  unite(life_stage, life_stage:life_stage_other, sep = "", na.rm = T) %>% 
+  select(!c(visit_comment)) 
+
+re_cap_table <- cap_animal_table %>% 
+  filter(capture_type == "recapture")
+
+cap_animal_table <- cap_animal_table%>% 
+  filter(capture_type == "new")
 
 write_csv(cap_animal_table, here("clean_tables", "capture.csv"))
+write_csv(re_cap_table, here("clean_tables", "recapture.csv"))
 
 ```
 
@@ -169,7 +196,9 @@ left_join(munged_VisualEncounter_Survey, munged_VisualEncounter_Survey_Repeatabl
          region = "pa",
          location = "usa",
          detection_type = "visual") %>% 
-  select(!c(start_hour, end_hour))
+  select(!c(start_hour, end_hour))%>% 
+  mutate(survey_time = if_else(is.na(survey_time), "night", survey_time),
+         site = if_else(is.na(site), "phelps pond", site))
 
 ```
 
