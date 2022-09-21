@@ -2,3 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
+clean_tables/
+data/
+old_data/
