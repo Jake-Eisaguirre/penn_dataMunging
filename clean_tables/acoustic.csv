@@ -1,25 +1,27 @@
-date,site,species_acoustic,call_index,acoustic_comments,survey_time,detection_type,temp_ves_id
-2022-05-26T00:00:00Z,wood lab pond,unknown,"1 - individuals can be counted, space between calls",small croak as it entered water.,night,acoustic,1
-2022-05-26T00:00:00Z,wood lab pond,rana clamitans,"1 - individuals can be counted, space between calls",small croak,night,acoustic,2
-2022-05-27T00:00:00Z,wood lab pond,rana catesbeiana,0 - species visible but no vocalization,NA,night,acoustic,3
-2022-05-27T00:00:00Z,wood lab pond,rana clamitans,0 - species visible but no vocalization,NA,night,acoustic,4
-2022-06-03T00:00:00Z,phelps pond,rana clamitans,"1 - individuals can be counted, space between calls",NA,night,acoustic,5
-2022-06-03T00:00:00Z,phelps pond,unknown,"1 - individuals can be counted, space between calls",squirrelly call. sounds like a smaller amphibian.  possible leonora frog?,night,acoustic,6
-2022-06-08T00:00:00Z,rv pond,hyla versicolor,"3 - full chorus, calls are constant and overlapping",NA,night,acoustic,7
-2022-06-08T00:00:00Z,rv pond,rana catesbeiana,"1 - individuals can be counted, space between calls",NA,night,acoustic,8
-2022-06-08T00:00:00Z,rv pond,rana clamitans,"1 - individuals can be counted, space between calls",NA,night,acoustic,9
-2022-06-14T00:00:00Z,tuttle pond,hyla versicolor,"3 - full chorus, calls are constant and overlapping",NA,night,acoustic,10
-2022-06-14T00:00:00Z,tuttle pond,rana catesbeiana,"2 - individuals can be counted, overlapping calls",NA,night,acoustic,11
-2022-06-14T00:00:00Z,tuttle pond,rana clamitans,"2 - individuals can be counted, overlapping calls",NA,night,acoustic,12
-2022-06-15T00:00:00Z,tuttle pond,rana clamitans,"2 - individuals can be counted, overlapping calls",NA,night,acoustic,13
-2022-06-15T00:00:00Z,tuttle pond,hyla versicolor,"1 - individuals can be counted, space between calls",NA,night,acoustic,14
-2022-06-15T00:00:00Z,tuttle pond,rana catesbeiana,"1 - individuals can be counted, space between calls",NA,night,acoustic,15
-2022-06-23T00:00:00Z,tryon-weber,rana clamitans,0 - species visible but no vocalization,NA,night,acoustic,16
-2022-06-23T00:00:00Z,tryon-weber,rana sylvatica,0 - species visible but no vocalization,NA,night,acoustic,17
-2022-06-27T00:00:00Z,vorisek pond,rana clamitans,0 - species visible but no vocalization,NA,night,acoustic,18
-2022-06-27T00:00:00Z,vorisek pond,rana catesbeiana,"1 - individuals can be counted, space between calls",single call,night,acoustic,19
-2022-07-11T00:00:00Z,rv pond,rana clamitans,"2 - individuals can be counted, overlapping calls",NA,night,acoustic,20
-2022-07-11T00:00:00Z,rv pond,rana catesbeiana,"2 - individuals can be counted, overlapping calls",NA,night,acoustic,21
-2022-07-18T00:00:00Z,tuttle pond,rana clamitans,"3 - full chorus, calls are constant and overlapping",NA,night,acoustic,22
-2022-07-18T00:00:00Z,tuttle pond,hyla versicolor,"1 - individuals can be counted, space between calls",NA,night,acoustic,23
-2022-07-18T00:00:00Z,tuttle pond,rana catesbeiana,0 - species visible but no vocalization,NA,night,acoustic,24
+date,site,species_acoustic,call_index,acoustic_comments,survey_time,detection_type
+2022-05-26T00:00:00Z,wood lab pond,unknown,"1 - individuals can be counted, space between calls",small croak as it entered water.,night,acoustic
+2022-05-26T00:00:00Z,wood lab pond,rana clamitans,"1 - individuals can be counted, space between calls",small croak,night,acoustic
+2022-05-27T00:00:00Z,wood lab pond,rana catesbeiana,0 - species visible but no vocalization,NA,night,acoustic
+2022-05-27T00:00:00Z,wood lab pond,rana clamitans,0 - species visible but no vocalization,NA,night,acoustic
+2022-06-03T00:00:00Z,phelps pond,rana clamitans,"1 - individuals can be counted, space between calls",NA,night,acoustic
+2022-06-03T00:00:00Z,phelps pond,unknown,"1 - individuals can be counted, space between calls",squirrelly call. sounds like a smaller amphibian.  possible leonora frog?,night,acoustic
+2022-06-08T00:00:00Z,rv pond,hyla versicolor,"3 - full chorus, calls are constant and overlapping",NA,night,acoustic
+2022-06-08T00:00:00Z,rv pond,rana catesbeiana,"1 - individuals can be counted, space between calls",NA,night,acoustic
+2022-06-08T00:00:00Z,rv pond,rana clamitans,"1 - individuals can be counted, space between calls",NA,night,acoustic
+2022-06-14T00:00:00Z,tuttle pond,hyla versicolor,"3 - full chorus, calls are constant and overlapping",NA,night,acoustic
+2022-06-14T00:00:00Z,tuttle pond,rana catesbeiana,"2 - individuals can be counted, overlapping calls",NA,night,acoustic
+2022-06-14T00:00:00Z,tuttle pond,rana clamitans,"2 - individuals can be counted, overlapping calls",NA,night,acoustic
+2022-06-15T00:00:00Z,tuttle pond,rana clamitans,"2 - individuals can be counted, overlapping calls",NA,night,acoustic
+2022-06-15T00:00:00Z,tuttle pond,hyla versicolor,"1 - individuals can be counted, space between calls",NA,night,acoustic
+2022-06-15T00:00:00Z,tuttle pond,rana catesbeiana,"1 - individuals can be counted, space between calls",NA,night,acoustic
+2022-06-23T00:00:00Z,tryon-weber,rana clamitans,0 - species visible but no vocalization,NA,night,acoustic
+2022-06-23T00:00:00Z,tryon-weber,rana sylvatica,0 - species visible but no vocalization,NA,night,acoustic
+2022-06-27T00:00:00Z,vorisek pond,rana clamitans,0 - species visible but no vocalization,NA,night,acoustic
+2022-06-27T00:00:00Z,vorisek pond,rana catesbeiana,"1 - individuals can be counted, space between calls",single call,night,acoustic
+2022-07-11T00:00:00Z,rv pond,rana clamitans,"2 - individuals can be counted, overlapping calls",NA,night,acoustic
+2022-07-11T00:00:00Z,rv pond,rana catesbeiana,"2 - individuals can be counted, overlapping calls",NA,night,acoustic
+2022-07-18T00:00:00Z,tuttle pond,rana clamitans,"3 - full chorus, calls are constant and overlapping",NA,night,acoustic
+2022-07-18T00:00:00Z,tuttle pond,hyla versicolor,"1 - individuals can be counted, space between calls",NA,night,acoustic
+2022-07-18T00:00:00Z,tuttle pond,rana catesbeiana,0 - species visible but no vocalization,NA,night,acoustic
+2022-09-10T00:00:00Z,rv pond,rana catesbeiana,0 - species visible but no vocalization,NA,night,acoustic
+2022-09-10T00:00:00Z,rv pond,rana clamitans,0 - species visible but no vocalization,NA,night,acoustic

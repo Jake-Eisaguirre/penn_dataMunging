@@ -1,25 +1,28 @@
-date,survey_time,site,detection_type,visit_comment,temp_reg_id
-2022-05-26T00:00:00Z,night,wood lab pond,acoustic,NA,8
-2022-05-27T00:00:00Z,night,wood lab pond,acoustic,NA,9
-2022-06-03T00:00:00Z,night,phelps pond,acoustic,NA,10
-2022-06-08T00:00:00Z,night,rv pond,acoustic,NA,12
-2022-06-14T00:00:00Z,night,tuttle pond,acoustic,NA,13
-2022-06-15T00:00:00Z,night,tuttle pond,acoustic,NA,14
-2022-06-23T00:00:00Z,night,tryon-weber,acoustic,NA,18
-2022-06-27T00:00:00Z,night,vorisek pond,acoustic,NA,19
-2022-07-11T00:00:00Z,night,rv pond,acoustic,NA,21
-2022-07-18T00:00:00Z,night,tuttle pond,acoustic,NA,23
-2022-05-20T00:00:00Z,day,admin pond,capture,NA,7
-2022-05-19T00:00:00Z,night,admin pond,capture,NA,6
-2022-06-07T00:00:00Z,night,rv pond,capture,app crashed and data was lost. remaining data is validated. some bd swabs are lost to unknown metadata.,11
-2022-06-22T00:00:00Z,day,tryon-weber,capture,NA,16
-2022-06-23T00:00:00Z,day,tryon-weber,capture,NA,17
-2022-06-28T00:00:00Z,night,vorisek pond,capture,NA,20
-2022-07-12T00:00:00Z,night,rv pond,capture,NA,22
-2022-07-19T00:00:00Z,night,tuttle pond,capture,NA,24
-2022-06-16T00:00:00Z,night,tuttle pond,capture,NA,15
-2022-05-04T00:00:00Z,night,wood lab pond,capture,NA,1
-2022-05-05T00:00:00Z,night,phelps pond,capture,edna was collected. 300ml passed through a 0.45 filter. stored with swab samples.,2
-2022-05-11T00:00:00Z,night,admin pond,capture,collected negative control. just blank swab in open tube and capped. first seven amphibs were soaked in apw while rest were soaked in wood lab water.,3
-2022-05-12T00:00:00Z,night,rv pond,capture,NA,4
-2022-05-18T00:00:00Z,night,admin pond,capture,NA,5
+date,survey_time,site,detection_type,visit_comment
+2022-05-26T00:00:00Z,night,wood lab pond,acoustic,NA
+2022-05-27T00:00:00Z,night,wood lab pond,acoustic,NA
+2022-06-03T00:00:00Z,night,phelps pond,acoustic,NA
+2022-06-08T00:00:00Z,night,rv pond,acoustic,NA
+2022-06-14T00:00:00Z,night,tuttle pond,acoustic,NA
+2022-06-15T00:00:00Z,night,tuttle pond,acoustic,NA
+2022-06-23T00:00:00Z,night,tryon-weber,acoustic,NA
+2022-06-27T00:00:00Z,night,vorisek pond,acoustic,NA
+2022-07-11T00:00:00Z,night,rv pond,acoustic,NA
+2022-07-18T00:00:00Z,night,tuttle pond,acoustic,NA
+2022-09-10T00:00:00Z,night,rv pond,acoustic,NA
+2022-05-20T00:00:00Z,day,admin pond,capture,NA
+2022-05-19T00:00:00Z,night,admin pond,capture,NA
+2022-06-07T00:00:00Z,night,rv pond,capture,app crashed and data was lost. remaining data is validated. some bd swabs are lost to unknown metadata.
+2022-06-22T00:00:00Z,day,tryon-weber,capture,NA
+2022-06-23T00:00:00Z,day,tryon-weber,capture,NA
+2022-06-28T00:00:00Z,night,vorisek pond,capture,NA
+2022-07-12T00:00:00Z,night,rv pond,capture,NA
+2022-07-19T00:00:00Z,night,tuttle pond,capture,NA
+2022-08-02T00:00:00Z,night,tryon-weber,capture,NA
+2022-06-16T00:00:00Z,night,tuttle pond,capture,NA
+2022-09-09T00:00:00Z,night,tuttle pond,capture,crispr survey only
+2022-05-04T00:00:00Z,night,wood lab pond,capture,NA
+2022-05-05T00:00:00Z,night,phelps pond,capture,edna was collected. 300ml passed through a 0.45 filter. stored with swab samples.
+2022-05-11T00:00:00Z,night,admin pond,capture,collected negative control. just blank swab in open tube and capped. first seven amphibs were soaked in apw while rest were soaked in wood lab water.
+2022-05-12T00:00:00Z,night,rv pond,capture,NA
+2022-05-18T00:00:00Z,night,admin pond,capture,NA

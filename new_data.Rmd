@@ -1,7 +1,7 @@
 ---
-title: "penn_Munging"
+title: "new_data"
 author: "Jake Eisaguirre"
-date: "2022-08-18"
+date: "2022-09-21"
 output: html_document
 ---
 
@@ -15,7 +15,7 @@ if (!require(librarian)){
 
 # librarian downloads, if not already downloaded, and reads in needed packages
 
-librarian::shelf(tidyverse, here, janitor, lubridate, parsedate, stringr,hms, DBI, RPostgres)
+librarian::shelf(tidyverse, here, janitor, lubridate, parsedate, stringr,hms)
 ```
 
 #### read in capture data
@@ -95,24 +95,11 @@ merged_AmphibianCaptureSurvey <- right_join(right_join(munged_Amphibian_Captured
          location = "usa",
          detection_type = "capture") %>% 
   select(!c(species_capture_other))%>% 
-  mutate(survey_time = if_else(is.na(survey_time), "night", survey_time))
+  mutate(survey_time = if_else(is.na(survey_time), "night", survey_time)) %>% 
+  filter(date > "2022-07-19")
 
 
 ```
-
-#### pull out locatoin and region table
-```{r}
-location <- merged_AmphibianCaptureSurvey %>% 
-  select(location) %>% 
-  unique() %>% 
-  write_csv(here("clean_tables", "location.csv"))
-
-region <- merged_AmphibianCaptureSurvey %>% 
-  select(region) %>% 
-  unique() %>% 
-  write_csv(here("clean_tables", "region.csv"))
-```
-
 
 #### pull out capture site table
 ```{r}
@@ -172,12 +159,13 @@ cap_animal_table <- merged_AmphibianCaptureSurvey %>%
          antibody_id_4=if_else(antibody_id_4 == "AntiBod00000", "NA", antibody_id_4),
          toe_clip_tube_id=if_else(toe_clip_tube_id == "ToeClip00000", "NA", toe_clip_tube_id))%>% 
    mutate(temp_ves_id = 1:n()) %>% 
-  unite(life_stage, life_stage:life_stage_other, sep = "", na.rm = T)
+  unite(life_stage, life_stage:life_stage_other, sep = "", na.rm = T) %>% 
+  select(!c(visit_comment, temp_ves_id)) 
 
 
 
-# cap_animal_table <- cap_animal_table%>% 
-#   filter(capture_type == "new")
+cap_animal_table <- cap_animal_table%>%
+  filter(capture_type == "new")
 
 write_csv(cap_animal_table, here("clean_tables", "capture.csv"))
 #write_csv(re_cap_table, here("clean_tables", "recapture.csv"))
@@ -223,7 +211,8 @@ left_join(munged_VisualEncounter_Survey, munged_VisualEncounter_Survey_Repeatabl
          detection_type = "visual") %>% 
   select(!c(start_hour, end_hour))%>% 
   mutate(survey_time = if_else(is.na(survey_time), "night", survey_time),
-         site = if_else(is.na(site), "phelps pond", site))
+         site = if_else(is.na(site), "phelps pond", site))%>% 
+  filter(date > "2022-07-19")
 
 ```
 
@@ -265,8 +254,8 @@ visual_survey_table$duration_min <- str_sub(visual_survey_table$duration_min, -4
 
 visual_animal_table <- merged_VisualEncounterSurvey %>% 
   select(date, site, species_ves, count, comments_ves, survey_time, detection_type) %>% 
-   mutate(temp_ves_id = 1:n()) %>% 
-  select(!c(temp_ves_id))
+   mutate(temp_ves_id = 1:n())%>% 
+  select(!temp_ves_id)
 
 write_csv(visual_animal_table, here("clean_tables", "visual.csv"))
 
@@ -300,7 +289,8 @@ left_join(munged_Acoustic_Survey, munged_Acoustic_Survey_Repeatable, by = c('ful
                           start_hour >= 19 &  (end_hour < 6 | end_hour <= 23) |
                          (start_hour < 6 & end_hour < 6)~ "night",
                          start_hour >=19 ~"night")) %>%
-  relocate(duration_min, .before = species_acoustic)
+  relocate(duration_min, .before = species_acoustic)%>% 
+  filter(date > "2022-07-19")
 
 merged_AcousticSurvey$duration_min <- str_sub(merged_AcousticSurvey$duration_min, -4) %>% 
   as.numeric()
@@ -338,7 +328,7 @@ acoustic_survey_table <- merged_AcousticSurvey %>%
 acoustic_animal_table <- merged_AcousticSurvey %>% 
   select(date, site, species_acoustic, call_index, acoustic_comments, survey_time, detection_type) %>% 
    mutate(temp_ves_id = 1:n()) %>% 
-  select(!c(temp_ves_id))
+  select(!temp_ves_id)
 
 write_csv(acoustic_animal_table, here("clean_tables", "acoustic.csv"))
 
@@ -351,7 +341,7 @@ site_table <- rbind(acoustic_site_table, visual_site_table, cap_site_table) %>%
   group_by(site) %>% 
   mutate(temp_reg_id = cur_group_id()) %>% 
   filter(!duplicated(temp_reg_id)) %>% 
-  select(!c(temp_reg_id))
+  select(!temp_reg_id)
 
 write_csv(site_table, here("clean_tables", "site.csv"))
 
@@ -366,7 +356,7 @@ visit_table <- plyr::rbind.fill(acoustic_visit_table, visual_visit_table, cap_vi
   group_by(date, survey_time, site) %>% 
   mutate(temp_reg_id = cur_group_id()) %>% 
   filter(!duplicated(temp_reg_id)) %>% 
-  select(!c(temp_reg_id))
+  select(!temp_reg_id)
 
 write_csv(visit_table, here("clean_tables", "visit.csv"))
 
@@ -379,58 +369,16 @@ survey_table <- plyr::rbind.fill(acoustic_survey_table, visual_survey_table, cap
   group_by(date, site, detection_type, survey_time) %>% 
   mutate(temp_reg_id = cur_group_id()) %>% 
   filter(!duplicated(temp_reg_id)) %>% 
-  select(!c(temp_reg_id))
+  select(!temp_reg_id)
 
 write_csv(survey_table, here("clean_tables", "survey.csv"))
 
 ```
 
-#### connect to local db
+#### bind all animal table for uniquness
 ```{r}
-tryCatch({
-    drv <- dbDriver("Postgres")
-    print("Connecting to Database…")
-    connection <- dbConnect(drv, 
-                 dbname = Sys.getenv("dbname"),
-                 host = Sys.getenv("host"), 
-                 port = Sys.getenv("port"),
-                 user = Sys.getenv("user"), 
-                 password = Sys.getenv("password"))
-    print("Database Connected!")
-    },
-    error=function(cond) {
-            print("Unable to connect to Database.")
-    })
 
-dbExecute(connection, "set search_path to test_penn")
-```
 
-#### load tabltes
-```{r}
-#location table load
-dbWriteTable(connection, 'location', location, overwrite=T)
-
-#region table load
-dbWriteTable(connection, 'region', region, overwrite=T)
-
-#site table load
-dbWriteTable(connection, 'site', site_table, overwrite=T)
-
-#visit table load
-dbWriteTable(connection, 'visit', visit_table, overwrite=T)
-
-#survey table load
-dbWriteTable(connection, 'survey', survey_table, overwrite=T)
-
-#aural table load
-dbWriteTable(connection, 'aural', acoustic_animal_table, overwrite=T)
-
-#capture table load
-dbWriteTable(connection, 'capture', cap_animal_table, overwrite=T)
-
-#visual table load
-dbWriteTable(connection, 'visual', visual_animal_table, overwrite=T)
 
 ```
-
 
