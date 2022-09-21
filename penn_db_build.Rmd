@@ -153,7 +153,7 @@ cap_survey_table$duration_min <- str_sub(cap_survey_table$duration_min, -4) %>%
 #### pull out cap animal table
 ```{r}
 
-cap_animal_table <- merged_AmphibianCaptureSurvey %>% 
+cap_animal <- merged_AmphibianCaptureSurvey %>% 
   mutate(capture_type = if_else(is.na(capture_type), "new", capture_type)) %>% 
   select(c(bag_id:detection_type, site, date)) %>% 
   mutate(capture_comments = str_to_lower(capture_comments),
@@ -176,7 +176,7 @@ cap_animal_table <- merged_AmphibianCaptureSurvey %>%
 
 
 
-# cap_animal_table <- cap_animal_table%>% 
+# cap_animal_table <- cap_animal%>%
 #   filter(capture_type == "new")
 
 write_csv(cap_animal_table, here("clean_tables", "capture.csv"))
@@ -187,12 +187,12 @@ write_csv(cap_animal_table, here("clean_tables", "capture.csv"))
 ### re-catpures table
 ```{r}
 
-re_cap_table <- cap_animal_table %>% 
+re_cap_table <- cap_animal %>% 
   filter(capture_type == "recapture")
 
 cmr <- read_csv(here("data", "munged_CMR_Data.csv"))
   
-cmr_table <- left_join(re_cap_table, cmr, by = c("capture_mark_recapture" = "fulcrum_id")) %>% 
+cmr_table <- cmr %>% 
   unite(cmr_id, cmr_id:cmr_id_other, sep="", na.rm=T)
 
 ```
@@ -402,7 +402,7 @@ tryCatch({
             print("Unable to connect to Database.")
     })
 
-dbExecute(connection, "set search_path to test_penn")
+dbExecute(connection, "set search_path to pennsylvania")
 ```
 
 #### load tabltes
