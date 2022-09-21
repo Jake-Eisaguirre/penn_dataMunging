@@ -71,7 +71,7 @@ merged_AmphibianCaptureSurvey <- right_join(right_join(munged_Amphibian_Captured
          microhabitat_type = microhabitat_type.x,
          microhabitat_temperature_c = microhabitat_temperature.x,
          site = location) %>% 
-  mutate(date = parse_iso_8601(date),
+  mutate(date = parse_date(date),
          observer = str_to_lower(observer),
          site = str_to_lower(site),
          bag_id = str_to_lower(bag_id),
@@ -176,8 +176,8 @@ cap_animal <- merged_AmphibianCaptureSurvey %>%
 
 
 
-# cap_animal_table <- cap_animal%>%
-#   filter(capture_type == "new")
+cap_animal_table <- cap_animal
+
 
 write_csv(cap_animal_table, here("clean_tables", "capture.csv"))
 #write_csv(re_cap_table, here("clean_tables", "recapture.csv"))
@@ -206,7 +206,7 @@ left_join(munged_VisualEncounter_Survey, munged_VisualEncounter_Survey_Repeatabl
   unique() %>%
   drop_na(species_ves) %>% 
   mutate(observer = str_to_lower(observer),
-         date = parse_iso_8601(date),
+         date = parse_date(date),
          location = str_to_lower(location),
          species_ves = str_to_lower(species_ves),
          comments_ves = str_to_lower(comments_ves)) %>% 
@@ -281,7 +281,7 @@ left_join(munged_Acoustic_Survey, munged_Acoustic_Survey_Repeatable, by = c('ful
   select(observer, date, location, start_time, end_time, species_acoustic, call_index, acoustic_comments) %>%
   unique() %>%
   mutate(observer = str_to_lower(observer),
-         date = parse_iso_8601(date),
+         date = parse_date(date),
          location = str_to_lower(location),
          species_acoustic = str_to_lower(species_acoustic),
          call_index = str_to_lower(call_index),
