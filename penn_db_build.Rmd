@@ -152,7 +152,6 @@ cap_survey_table$duration_min <- str_sub(cap_survey_table$duration_min, -4) %>%
 
 #### pull out cap animal table
 ```{r}
-
 cap_animal <- merged_AmphibianCaptureSurvey %>% 
   mutate(capture_type = if_else(is.na(capture_type), "new", capture_type)) %>% 
   select(c(bag_id:detection_type, site, date)) %>% 
@@ -173,15 +172,56 @@ cap_animal <- merged_AmphibianCaptureSurvey %>%
          toe_clip_tube_id=if_else(toe_clip_tube_id == "ToeClip00000", "NA", toe_clip_tube_id))%>% 
    mutate(temp_ves_id = 1:n()) %>% 
   unite(life_stage, life_stage:life_stage_other, sep = "", na.rm = T)
+```
+
+# add cmr id to animal table
+```{r}
+cmr <- read_csv(here("data", "munged_CMR_Data.csv"))
+  
+cc <- cmr %>% 
+  unite(cmr_id, cmr_id:cmr_id_other, sep="", na.rm=T)
 
 
+# remove duplicate cmr data
+dups <- cc %>% 
+  group_by(fulcrum_id) %>% 
+  mutate(dub_id = cur_group_id()) %>% 
+  ungroup() %>% 
+  mutate(temp_id = 1:n())
 
-cap_animal_table <- cap_animal
+to_remove <- c(82, 83, 81, 80, 84, 78, 79)
+
+
+cmr_noDups <- dups %>% 
+  na_if("") %>% 
+  filter(!temp_id %in% to_remove) %>% 
+  drop_na(cmr_id) %>% 
+  select(!c(temp_id, dub_id))
+
+# join cmr id (toe clip number) to all animal capture data to know which toes have been clipped initiall and be able to id if recap
+cap_animal_table_cmr_id <- cap_animal %>%
+  left_join(cmr_noDups, by = c("capture_mark_recapture" = "fulcrum_id")) %>% 
+  select(!c(capture_date, species, location.y, temp_ves_id, created_at))
+
+# pull out frogs who have been recaptured
+re_cap_table <- cap_animal_table_cmr_id %>% 
+  filter(capture_type == "recapture") %>% 
+  drop_na(capture_mark_recapture)
+
+colnames(re_cap_table) <- paste(colnames(re_cap_table), "recap", sep="_")
+
+# pull out frogs that are new captures
+cap_animal_table <- cap_animal_table_cmr_id %>%
+  filter(capture_type == "new")
+
+# look for duplicates
+test_dubs <- re_cap_table %>% 
+  group_by(site_recap, species_capture_recap, cmr_id_recap, date_recap) %>% 
+  mutate(temp_id = cur_group_id())
 
 
 write_csv(cap_animal_table, here("clean_tables", "capture.csv"))
-#write_csv(re_cap_table, here("clean_tables", "recapture.csv"))
-
+write_csv(re_cap_table, here("clean_tables", "recapture.csv"))
 ```
 
 ### re-catpures table
@@ -190,10 +230,9 @@ write_csv(cap_animal_table, here("clean_tables", "capture.csv"))
 re_cap_table <- cap_animal %>% 
   filter(capture_type == "recapture")
 
-cmr <- read_csv(here("data", "munged_CMR_Data.csv"))
-  
-cmr_table <- cmr %>% 
-  unite(cmr_id, cmr_id:cmr_id_other, sep="", na.rm=T)
+
+
+
 
 ```
 
@@ -427,6 +466,9 @@ dbWriteTable(connection, 'aural', acoustic_animal_table, overwrite=T)
 
 #capture table load
 dbWriteTable(connection, 'capture', cap_animal_table, overwrite=T)
+
+#recapture table load
+dbWriteTable(connection, "recapture", re_cap_table, overwrite=T)
 
 #visual table load
 dbWriteTable(connection, 'visual', visual_animal_table, overwrite=T)
