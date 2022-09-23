@@ -216,8 +216,10 @@ cap_animal_table <- cap_animal_table_cmr_id %>%
 
 # look for duplicates
 test_dubs <- re_cap_table %>% 
-  group_by(site_recap, species_capture_recap, cmr_id_recap, date_recap) %>% 
-  mutate(temp_id = cur_group_id())
+  drop_na(cmr_id_recap) %>% 
+  group_by(site_recap, species_capture_recap, cmr_id_recap) %>% 
+  mutate(temp_id = cur_group_id()) %>% 
+  filter(duplicated(temp_id))
 
 
 write_csv(cap_animal_table, here("clean_tables", "capture.csv"))
